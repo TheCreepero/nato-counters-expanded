@@ -1,0 +1,20 @@
+# Archives and build artifacts
+*.zip
+*.7z
+*.tar.gz
+artifacts/
+scratch/
+*.mod
+!descriptor.mod
+
+# OS and Editor files
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
+*.swp
+*.bak
+__pycache__/
+*.pyc
+.steam_username
