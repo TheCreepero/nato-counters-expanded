@@ -59,6 +59,16 @@ def declared_template_indices(content_dir):
     return indices
 
 
+def template_textures(content_dir, size):
+    textures = {}
+    for gfx_file in (content_dir / "interface").rglob("*.gfx"):
+        text = gfx_file.read_text(encoding="utf-8", errors="replace")
+        pattern = rf'name\s*=\s*"GFX_div_templ_(\d+)_{size.name}"\s+textureFile\s*=\s*"([^"]+)"'
+        for index, texture in re.findall(pattern, text):
+            textures[int(index)] = content_dir / texture
+    return textures
+
+
 def battalion_names(rbm_dir):
     files = (counters_folder(rbm_dir) / "divisions_small").glob("mpu.unit.*.Bn.map.dds")
     return sorted(path.name[len("mpu.unit."):-len(".Bn.map.dds")] for path in files)

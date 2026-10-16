@@ -50,6 +50,7 @@ tools/generate_counters.py  ---> gfx/interface/counters/division_templates_large
         |                        interface/nato_counters_expanded.gfx
         |                        artifacts/counter_preview.png
         |                        artifacts/reference_comparison.png
+        |                        artifacts/picker_preview.png
 assets/counters/plates/          blank plates, one per colour, echelon and size
 assets/counters/palette.json     ink colour per plate colour
 assets/counters/index_manifest.json   the icon index of every counter
@@ -67,10 +68,11 @@ Regenerate everything after changing a symbol:
 python tools\generate_counters.py
 ```
 
-Two sheets are written to `artifacts\`:
+Three sheets are written to `artifacts\`:
 
 - `counter_preview.png`: one row per symbol, the division counter in all 12 colours followed by the four echelons at map size.
 - `reference_comparison.png`: RBM's battalion icon next to this mod's counter for the same branch, with the match score.
+- `picker_preview.png`: the counters as the division designer's picker lists them, 8 per row in index order, starting with RBM's last row. A red line marks where this mod begins at 1080; a yellow line every 8 rows marks one screen of the picker.
 
 ### The RBM check
 
@@ -109,7 +111,7 @@ def tank_destroyer(pen):
 
 The game stores a division template's icon as a number. `assets/counters/index_manifest.json` records the number of every counter so that it never changes between releases; a new counter takes the next index after the last one. The range starts at 1080 (`FIRST_INDEX` in `tools/counters/layout.py`), right after RBM's last icon, because the picker stops at a gap.
 
-Once a campaign uses the counters, only append symbols. Removing, renaming or reordering one would make that campaign's templates show the wrong icon. The generator refuses to run if a symbol disappears; `--renumber` overrides that and is only safe before the first release.
+Once a campaign uses the counters, only append symbols. Removing, renaming or reordering one would make that campaign's templates show the wrong icon. The generator refuses to run if a symbol disappears; `--renumber` overrides that and is only safe before the freeze, the first campaign kept with these counters (see `ROADMAP.md`).
 
 ### Plates
 
@@ -134,7 +136,8 @@ C:\dev\nato-counters-expanded/
 |-- tools/                          # Counter generator and RBM check (Python)
 |-- artifacts/                      # Preview sheets and release archives (git-ignored)
 |-- tests/                          # Automated Pester test suites
-\-- wiki/                           # GitHub documentation wiki
+|-- GEMINI.md                       # Development rules for agents (CLAUDE.md includes it)
+\-- ROADMAP.md                      # Planned work and the decisions waiting for the owner
 ```
 
 ---

@@ -9,6 +9,11 @@ COUNTERS_DIR = REPO_ROOT / "gfx" / "interface" / "counters"
 GFX_PATH = REPO_ROOT / "interface" / "nato_counters_expanded.gfx"
 PREVIEW_PATH = REPO_ROOT / "artifacts" / "counter_preview.png"
 COMPARISON_PATH = REPO_ROOT / "artifacts" / "reference_comparison.png"
+PICKER_PATH = REPO_ROOT / "artifacts" / "picker_preview.png"
+
+PICKER_COLUMNS = 8
+PICKER_VISIBLE_ROWS = 8
+PICKER_SLOT_HEIGHT = 50
 
 RBM_WORKSHOP_ID = "3496134789"
 HOI4_APP_ID = "394360"

@@ -5,6 +5,8 @@
   - **Workspace & Git root**: `C:\dev\nato-counters-expanded` (Git repository root containing `.git/`)
   - All mod descriptors (`descriptor.mod`), build tools (`build.ps1`), content (`gfx/`, `interface/`), tests (`tests/`), and agent configurations (`GEMINI.md`) reside at the project root.
   - Release archives (`artifacts/`) and scratch scripts (`scratch/`) are git-ignored.
+- **Where development notes live**: rules and workflow for agents in this file, setup and commands for people in `README.md`, plans in `ROADMAP.md`, engine facts in the knowledge register (section 6). The repository has no wiki.
+- **Roadmap**: `ROADMAP.md` holds the planned work in order, the freeze status and the decisions waiting for the owner. Read it before choosing what to work on next, before adding or renumbering symbols, and after a game or RBM update.
 
 ## 2. Clausewitz File Format & Syntax Invariants
 - **UTF-8 Without BOM**: Save all Clausewitz script files (`.mod`, `.txt`, `.gui`, `.gfx`) in UTF-8 without BOM [ENC-001] [ENC-002]; localisation `.yml` files are the exception and need the BOM [LOC-001]. Never use standard Windows PowerShell `Set-Content -Encoding UTF8` for a script file because it writes a BOM (`\ufeff`). Always write text files using:
@@ -47,7 +49,7 @@ Follow these steps in order. Do not skip step 1 or 2.
 2. **Find RBM's own glyph for the branch.** RBM draws most branches as battalion icons. `python tools/check_references.py --list` names them and `--reference <Name>` prints one pixel by pixel. They sit on the same plate as the map-size counters, so they are an exact target.
 3. **Write the draw function** in `tools/counters/symbols.py` and append `Symbol("key", "Display Name", "<RBM battalion icon name>", function)` to the END of `SYMBOLS`. Build it from the shared parts wherever RBM's glyph contains them (`armour_oval`, `gun_dot`, `anti_tank_vee`, `anti_air_peak`, `recon_slash`, `hollow_wheels`, `solid_wheels`), so the same shape is identical on every counter.
 4. **Fit it.** `python tools/check_references.py --show <key>` prints RBM's glyph and yours side by side with a match score from 0 to 1. Adjust until it is at least 0.80; the existing symbols score 0.86 to 0.99.
-5. **Generate and look.** Run `python tools/generate_counters.py`, then open `artifacts/reference_comparison.png` (RBM's icon next to yours) and `artifacts/counter_preview.png` (all 12 colours, then the four echelons at map size). Finish with `build.ps1 -Test`.
+5. **Generate and look.** Run `python tools/generate_counters.py`, then open `artifacts/reference_comparison.png` (RBM's icon next to yours) and `artifacts/counter_preview.png` (all 12 colours, then the four echelons at map size); `artifacts/picker_preview.png` shows where the new counters fall in the picker. Finish with `build.ps1 -Test`.
 
 - **A branch RBM has no icon for**: use `None` as the reference only after the user has approved the design, and compose it from the shared parts. Say in your report that it has no RBM reference.
 
@@ -74,6 +76,6 @@ If RBM's GFX Overhaul is not installed, the comparison is skipped with a warning
 
 ## 6. Engine Knowledge
 - Facts about how the game and its engine behave live in one place: the knowledge register of the Modding Manager, reached through the user-level `hoi4-modding-knowledge` skill. Search it before writing a kind of mod file for the first time in a session and before asking for a game launch.
-- Do not write an engine fact into this repository (this file, `wiki/`, `docs/`, skills). Add it to the register with `Add-HoiKnowledge.ps1` and cite its id here, as in `[LOAD-010]`.
+- Do not write an engine fact into this repository (this file, `README.md`, `ROADMAP.md`, skills). Add it to the register with `Add-HoiKnowledge.ps1` and cite its id here, as in `[LOAD-010]`.
 - Topics this mod leans on: `division-icons`, `engine-limits`, `mods/rbm`, `gui-sprites-and-fonts`, `loading-and-overrides`.
 - `tests/Knowledge.Tests.ps1` runs the register's audit for this repository. Keep it identical to the Manager's `Scripts/Knowledge/Knowledge.Tests.ps1`.

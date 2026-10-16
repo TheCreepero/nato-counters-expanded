@@ -9,7 +9,8 @@ from PIL import Image, ImageDraw
 from counters import dds, rbm, reference
 from counters.canvas import Pen
 from counters.layout import (COLOURS, COMPARISON_PATH, COUNTERS_DIR, ECHELONS, FILE_PREFIX, FIRST_INDEX, GFX_PATH, LARGE,
-                             MANIFEST_PATH, PALETTE_PATH, PREVIEW_PATH, REPO_ROOT, SHIPPED_VARIANTS, SIZES, SMALL,
+                             MANIFEST_PATH, PALETTE_PATH, PICKER_COLUMNS, PICKER_PATH, PICKER_SLOT_HEIGHT,
+                             PICKER_VISIBLE_ROWS, PREVIEW_PATH, REPO_ROOT, SHIPPED_VARIANTS, SIZES, SMALL,
                              counter_file_name, counter_key, plate_path)
 from counters.symbols import SYMBOLS
 
@@ -17,6 +18,10 @@ PREVIEW_SCALE = 3
 PREVIEW_LABEL_WIDTH = 170
 PREVIEW_BACKGROUND = (60, 70, 60, 255)
 COMPARISON_SCALE = 5
+PICKER_SCALE = 2
+PICKER_LABEL_WIDTH = 260
+PICKER_SCREEN_LINE = (230, 200, 90, 255)
+PICKER_SEAM_LINE = (230, 70, 60, 255)
 
 
 def check_against_rbm(rbm_dir):
@@ -66,7 +71,7 @@ def assign_indices(manifest):
         sys.exit(
             f"{len(retired)} counters in {MANIFEST_PATH.name} have no symbol any more (first: {retired[0]}). "
             "Removing a symbol leaves a gap in the icon indices. Restore the symbol, or pass --renumber "
-            "if this mod has not been published yet."
+            "if no campaign the owner keeps uses the counters yet (the freeze in ROADMAP.md)."
         )
     next_index = max(manifest.values(), default=FIRST_INDEX - 1) + 1
     for key in expected_keys:
@@ -139,9 +144,53 @@ def write_preview(counters):
     sheet.save(PREVIEW_PATH)
 
 
+def write_picker_preview(rbm_dir, manifest, counters):
+    icons = {}
+    if rbm_dir is not None and rbm_dir.is_dir():
+        textures = rbm.template_textures(rbm_dir, LARGE)
+        for index in range(FIRST_INDEX - PICKER_COLUMNS, FIRST_INDEX):
+            if index in textures:
+                icons[index] = (dds.read_rgba(textures[index]), "RBM's GFX Overhaul")
+    names = {symbol.key: symbol.name for symbol in SYMBOLS}
+    for key, index in manifest.items():
+        symbol_key, echelon, colour = key.split(".")
+        icons[index] = (counters[(symbol_key, echelon, colour, LARGE.name)], names[symbol_key])
+
+    first_row = min(icons) // PICKER_COLUMNS
+    rows = max(icons) // PICKER_COLUMNS - first_row + 1
+    cell_width = LARGE.width * PICKER_SCALE
+    cell_height = PICKER_SLOT_HEIGHT * PICKER_SCALE
+    sheet = Image.new("RGBA", (PICKER_LABEL_WIDTH + PICKER_COLUMNS * cell_width, rows * cell_height), PREVIEW_BACKGROUND)
+    draw = ImageDraw.Draw(sheet)
+    previous_name = None
+    for row in range(rows):
+        picker_row = first_row + row
+        top = row * cell_height
+        row_indices = [index for index in range(picker_row * PICKER_COLUMNS, (picker_row + 1) * PICKER_COLUMNS) if index in icons]
+        if not row_indices:
+            continue
+        name = icons[row_indices[0]][1]
+        label = f"row {picker_row}  index {row_indices[0]}"
+        if name != previous_name:
+            label += f"\n{name}"
+            previous_name = name
+        draw.multiline_text((6, top + 6), label, fill=(255, 255, 255, 255))
+        if picker_row % PICKER_VISIBLE_ROWS == 0:
+            draw.line([(0, top), (sheet.width, top)], fill=PICKER_SCREEN_LINE, width=1)
+        if row_indices[0] == FIRST_INDEX:
+            draw.line([(0, top), (sheet.width, top)], fill=PICKER_SEAM_LINE, width=3)
+        for index in row_indices:
+            image = Image.fromarray(icons[index][0], "RGBA")
+            image = image.resize((image.width * PICKER_SCALE, image.height * PICKER_SCALE), Image.NEAREST)
+            left = PICKER_LABEL_WIDTH + (index % PICKER_COLUMNS) * cell_width
+            sheet.alpha_composite(image, (left, top + (cell_height - image.height) // 2))
+    PICKER_PATH.parent.mkdir(parents=True, exist_ok=True)
+    sheet.save(PICKER_PATH)
+
+
 def main():
     parser = argparse.ArgumentParser(description="Render every counter, the sprite definitions and a preview sheet.")
-    parser.add_argument("--renumber", action="store_true", help="Discard the saved icon indices. Only safe before the mod is published.")
+    parser.add_argument("--renumber", action="store_true", help="Discard the saved icon indices. Only safe before the freeze (ROADMAP.md).")
     parser.add_argument("--rbm-dir", type=Path, help="Folder of the installed RBM's GFX Overhaul mod.")
     parser.add_argument("--game-dir", type=Path, help="Folder of the installed game, for the check that no icon index is already declared.")
     arguments = parser.parse_args()
@@ -183,12 +232,14 @@ def main():
     write_gfx(manifest)
     write_manifest(manifest)
     write_preview(counters)
+    write_picker_preview(rbm_dir, manifest, counters)
 
     indices = sorted(manifest.values())
     print(f"Symbols: {len(SYMBOLS)}   counters: {len(manifest)}   icon indices: {indices[0]}-{indices[-1]}")
     print(f"Wrote {len(written)} DDS files, removed {removed} stale files")
     print(f"Sprites: {GFX_PATH.relative_to(REPO_ROOT)}")
     print(f"Preview: {PREVIEW_PATH.relative_to(REPO_ROOT)}")
+    print(f"Picker: {PICKER_PATH.relative_to(REPO_ROOT)}")
     if reference_rows is not None:
         write_comparison(rbm_dir, reference_rows, counters)
         scores = [score for _symbol, score, _name, _closest in reference_rows if score is not None]
