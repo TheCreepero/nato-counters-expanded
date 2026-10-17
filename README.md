@@ -32,7 +32,9 @@ The game lists only icon indices 0 to 1023 in the division designer's picker, an
 
 RBM's GFX Overhaul offers 21 selectable division counters, covering infantry, cavalry, motorised and mechanised troops, tanks, militia, garrison and military police. This mod adds the branches it only draws as battalion icons:
 
-Artillery, Motorised Artillery, Anti-Tank, Anti-Air, Rocket Artillery, Self-Propelled Artillery, Tank Destroyer, Self-Propelled Anti-Air, Motorised Recon, Armoured Car, Bicycle Infantry, Engineer, Signal, Medical, Logistics, Maintenance.
+Artillery, Motorised Artillery, Anti-Tank, Motorised Anti-Tank, Anti-Air, Motorised Anti-Air, Rocket Artillery, Motorised Rocket Artillery, Self-Propelled Artillery, Tank Destroyer and Self-Propelled Anti-Air (each in Light, Medium, Heavy, Super-Heavy and Modern), Modern Tank, Amphibious Tank, Motorised Recon, Armoured Recon, Armoured Car, Bicycle Infantry, Engineer, Signal, Medical, Logistics, Maintenance.
+
+The vehicle weights carry RBM's own marks: no bar for Light, a thin bar at the left for Medium, a thick one for Heavy, a wide block for Super-Heavy and a bar at each side for Modern.
 
 Each symbol comes as Corps, Division, Brigade and Regiment in white, urban, black, red, orange, desert, mountain, jungle, forest, marine, airborne and arctic: 48 counters per symbol.
 
@@ -105,6 +107,14 @@ def tank_destroyer(pen):
     armour_oval(pen)
     anti_tank_vee(pen)
     gun_dot(pen)
+```
+
+### Designs without an RBM icon
+
+A branch RBM's GFX Overhaul has no icon for is proposed first, in `tools/counters/proposals.py`, and approved by the owner before it ships. The design sheet shows each proposal next to the RBM counter it borrows its mark from, in six colours and the four echelons:
+
+```powershell
+python tools\design_sheet.py
 ```
 
 ### Icon indices must stay stable

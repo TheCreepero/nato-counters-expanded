@@ -45,18 +45,18 @@
 
 ### 5.2 Adding a symbol
 Follow these steps in order. Do not skip step 1 or 2.
-1. **Confirm it is new.** RBM already offers these as selectable division counters: Military Police, Harbour Defence, Militia, Garrison, Foot Infantry, Marine Infantry, Mountain Infantry, Airborne Infantry, Commando Infantry, Shock Infantry, Horsed Cavalry, Semi Motorised Infantry, Motorised Infantry, Mechanised Infantry, Amphibious Mechanised, Cavalry Tank, Infantry Tank, Light Tank, Medium Tank, Heavy Tank, Super-Heavy Tank. Do not add any of them or a lookalike.
+1. **Confirm it is new.** RBM already offers these as selectable division counters: Military Police, Harbour Defence, Militia, Garrison, Foot Infantry, Marine Infantry, Mountain Infantry, Airborne Infantry, Commando Infantry, Shock Infantry, Horsed Cavalry, Semi Motorised Infantry, Motorised Infantry, Mechanised Infantry, Amphibious Mechanised, Cavalry Tank, Infantry Tank, Light Tank, Medium Tank, Heavy Tank, Super-Heavy Tank. Do not add any of them or a lookalike. RBM's `Support.Recon.Tank` and `Support.Recon.Cavalry` battalion icons are the same glyphs as its Cavalry Tank and Horsed Cavalry counters, so they are lookalikes too.
 2. **Find RBM's own glyph for the branch.** RBM draws most branches as battalion icons. `python tools/check_references.py --list` names them and `--reference <Name>` prints one pixel by pixel. They sit on the same plate as the map-size counters, so they are an exact target.
-3. **Write the draw function** in `tools/counters/symbols.py` and append `Symbol("key", "Display Name", "<RBM battalion icon name>", function)` to the END of `SYMBOLS`. Build it from the shared parts wherever RBM's glyph contains them (`armour_oval`, `gun_dot`, `anti_tank_vee`, `anti_air_peak`, `recon_slash`, `hollow_wheels`, `solid_wheels`), so the same shape is identical on every counter.
+3. **Write the draw function** in `tools/counters/symbols.py` and append `Symbol("key", "Display Name", "<RBM battalion icon name>", function)` to the END of `SYMBOLS`. Build it from the shared parts wherever RBM's glyph contains them (`armour_oval`, `gun_dot`, `anti_tank_vee`, `anti_air_peak`, `recon_slash`, `hollow_wheels`, `solid_wheels`, `weight_bars`, `amphibious_waves`), so the same shape is identical on every counter.
 4. **Fit it.** `python tools/check_references.py --show <key>` prints RBM's glyph and yours side by side with a match score from 0 to 1. Adjust until it is at least 0.80; the existing symbols score 0.86 to 0.99.
 5. **Generate and look.** Run `python tools/generate_counters.py`, then open `artifacts/reference_comparison.png` (RBM's icon next to yours) and `artifacts/counter_preview.png` (all 12 colours, then the four echelons at map size); `artifacts/picker_preview.png` shows where the new counters fall in the picker. Finish with `build.ps1 -Test`.
 
-- **A branch RBM has no icon for**: use `None` as the reference only after the user has approved the design, and compose it from the shared parts. Say in your report that it has no RBM reference.
+- **A branch RBM has no icon for**: draw it first in `tools/counters/proposals.py` and show it to the user on the design sheet (`python tools/design_sheet.py`, written to `artifacts/design_sheet.png`). Only after the user has approved the design, move it to `SYMBOLS` with `None` as the reference, its marks with it as shared parts. Say in your report that it has no RBM reference.
 
 ### 5.3 What the generator refuses
 `generate_counters.py` writes nothing and exits with an error when:
 - a symbol matches its RBM reference below 0.80;
-- a symbol matches one of RBM's existing counters at 0.80 or more (a duplicate; the closest legitimate symbol today scores 0.63);
+- a symbol matches one of RBM's existing counters at 0.80 or more (a duplicate; the closest legitimate symbol today, `sp_artillery_super_heavy` against Super-Heavy Tank, scores 0.79);
 - RBM's GFX Overhaul no longer ends at icon index 1079, or the game declares one of this mod's indices (the icons would collide, or a gap would hide this mod's icons: stop and tell the user);
 - a symbol was removed, renamed or its key changed (see 5.5).
 

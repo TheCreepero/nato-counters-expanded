@@ -2,7 +2,7 @@
 
 The planned work for NATO Counters Expanded, in order, and the decisions that wait for the owner. How to do the work is in `GEMINI.md`; engine facts live in the knowledge register and appear here only as citations such as [LIM-003].
 
-Last reviewed: 2026-10-16.
+Last reviewed: 2026-10-18.
 
 ## Using this file
 
@@ -31,7 +31,7 @@ Before the freeze the whole symbol list may be renumbered once: reorder `SYMBOLS
 
 - [x] **1.1 Picker preview.** Add a sheet to `generate_counters.py`, written to `artifacts/`, that lays the counters out as the division designer's picker shows them: in index order, 8 per row (`symbols_grid` in RBM's `interface/divisiondesignerview.gui`: `max_slots_horizontal = 8`, 504x400 with 76x50 slots, so 8 rows on screen), starting with RBM's last row so the seam at 1080 shows. 1.2 and 2.3 are judged on this sheet. Done when the sheet is written on every run and the owner has seen it.
   - 2026-10-16: done. `artifacts/picker_preview.png` is written on every run (red line at 1080, yellow line every 8 rows); the owner approved it.
-- [x] **1.2 Owner (D1): variants per symbol.** 2026-10-16: every symbol keeps all 48 variants. Every symbol ships in 48 variants (`SHIPPED_VARIANTS` in `tools/counters/layout.py`), which fill 6 rows of the picker. After Phase 2 the picker holds about 2,800 icons: RBM's 1,080 and up to 1,728 of this mod's (36 symbols). Options:
+- [x] **1.2 Owner (D1): variants per symbol.** 2026-10-16: every symbol keeps all 48 variants. Every symbol ships in 48 variants (`SHIPPED_VARIANTS` in `tools/counters/layout.py`), which fill 6 rows of the picker. After Phase 2 the picker holds 2,712 icons: RBM's 1,080 and 1,632 of this mod's (34 symbols). Options:
   - keep 48 for every symbol;
   - ship fewer colours or echelons for some symbols. This needs per-symbol variants in the generator and a change to `GEMINI.md` section 5.5, which says every symbol ships 48.
 - [x] **1.3 Confirm that a save keeps a template's icon.** 2026-10-16: confirmed by the owner's save and reload test; [ICON-002] is now confirmed in the register. The unpatched case was dropped (D2).
@@ -53,10 +53,11 @@ Before the freeze the whole symbol list may be renumbered once: reorder `SYMBOLS
 
 Each symbol here has an RBM battalion icon to copy, so the RBM check applies in full. Add them one at a time by `GEMINI.md` section 5.2. Keys become permanent at the freeze: use the keys below unless the owner chooses others. The existing `sp_artillery`, `tank_destroyer` and `sp_anti_air` are the Light versions; their keys stay as they are.
 
-- [ ] **2.1 Shared parts.** Add to `tools/counters/symbols.py`, fitted with `python tools/check_references.py --reference <Name>`:
+- [x] **2.1 Shared parts.** Add to `tools/counters/symbols.py`, fitted with `python tools/check_references.py --reference <Name>`:
   - `weight_bars(pen, weight)`: RBM marks a vehicle's weight with vertical bars outside the oval. Light has none, Medium one thin bar at the left, Heavy one thick bar at the left, Super-Heavy a wider block at the left, Modern a bar at each side. Fit it on `Artillery.SPG.Medium`, `.Heavy`, `.SuperHeavy` and `.Modern`.
   - `amphibious_waves(pen)`: the wave line under the oval of `Armour.Amphibious.Light`.
-- [ ] **2.2 Symbols.** Done when every row is either added or set aside with its reason written here, the generator writes without refusing, `build.ps1 -Test` passes, and the owner has looked at `artifacts/counter_preview.png` and `artifacts/reference_comparison.png`.
+  - 2026-10-18: done. Both are in `tools/counters/symbols.py`; `weighted(draw, weight)` adds the bars to an existing Light glyph.
+- [x] **2.2 Symbols.** Done when every row is either added or set aside with its reason written here, the generator writes without refusing, `build.ps1 -Test` passes, and the owner has looked at `artifacts/counter_preview.png` and `artifacts/reference_comparison.png`.
 
 | Keys | Display names | RBM references | Parts |
 |---|---|---|---|
@@ -72,18 +73,24 @@ Each symbol here has an RBM battalion icon to copy, so the RBM check applies in 
 | `amphibious_tank` | Amphibious Tank | `Armour.Amphibious.Light` | `armour_oval`, `amphibious_waves` |
 | `cavalry_recon` | Cavalry Recon | `Support.Recon.Cavalry` | a filled triangle |
 
+2026-10-18: 18 of the 20 added (34 symbols, indices 1080 to 2711). Every one matches its RBM icon at 0.86 to 0.95 and passes the duplicate check; the closest, `sp_artillery_super_heavy`, scores 0.79 against RBM's Super-Heavy Tank counter, which differs from it only by the gun dot. Set aside as duplicates:
+- `tank_recon`: RBM's `Support.Recon.Tank` is the same glyph as its Cavalry Tank counter (match 0.90).
+- `cavalry_recon`: RBM's `Support.Recon.Cavalry` is the same glyph as its Horsed Cavalry counter (match 0.99).
+
+2026-10-18: the owner looked at `artifacts/counter_preview.png` and `artifacts/reference_comparison.png` and approved them.
+
 Watch for these:
 - `modern_tank` may score as a duplicate of RBM's tank counters, `amphibious_tank` of RBM's Amphibious Mechanised, and `cavalry_recon` of RBM's Horsed Cavalry. When the generator refuses one as a duplicate, set it aside here with its score.
 - RBM has two near-identical motorised rocket icons, `Artillery.Rocket.Motorised` and `Mobile.Rocket.Motorised`. Add one symbol for both.
 - Out of scope: `Fake.Intel` and `No.Intel`, which are not branches, and every branch RBM already offers as a counter (`GEMINI.md` section 5.2, step 1).
 
-- [ ] **2.3 Owner (D4): group the families, then renumber once.** Before the freeze only; after it this item lapses and new symbols append. If the owner wants related symbols side by side in the picker, reorder `SYMBOLS` by family, run `generate_counters.py --renumber` once, and show the owner the picker preview (1.1). A proposed order:
+- [x] **2.3 Owner (D4): group the families, then renumber once.** 2026-10-18: no. The owner keeps the order of `artifacts/picker_preview.png` (the 16 first symbols, then Phase 2's in the order of the table above); nothing is renumbered. Before the freeze only; after it this item lapses and new symbols append. If the owner wants related symbols side by side in the picker, reorder `SYMBOLS` by family, run `generate_counters.py --renumber` once, and show the owner the picker preview (1.1). A proposed order:
   1. Artillery, Motorised Artillery, then Self-Propelled Artillery from Light to Modern.
   2. Rocket Artillery, Motorised Rocket Artillery.
   3. Anti-Tank, Motorised Anti-Tank, then Tank Destroyer from Light to Modern.
   4. Anti-Air, Motorised Anti-Air, then Self-Propelled Anti-Air from Light to Modern.
   5. Modern Tank, Amphibious Tank.
-  6. Motorised Recon, Armoured Recon, Tank Recon, Cavalry Recon, Armoured Car.
+  6. Motorised Recon, Armoured Recon, Armoured Car.
   7. Bicycle Infantry.
   8. Engineer, Signal, Medical, Logistics, Maintenance.
 
@@ -94,16 +101,18 @@ Watch for these:
   - armoured and motorised engineers: the engineer glyph with `armour_oval` or `solid_wheels`.
 
   Show the proposals on the design sheet (4.2), add the approved ones as shared parts and symbols, and record each answer under Decisions. Done when the owner has accepted or declined every proposal.
+  - 2026-10-18: 14 proposals in `tools/counters/proposals.py`: Mountain, Airborne and Marine versions of Artillery, Anti-Tank, Anti-Air and Engineer, plus Armoured and Motorised Engineer. The marks copy RBM's own template counters: a small filled peak (Mountain Infantry), a parachute (Airborne Infantry) and an anchor (Marine Infantry). Each mark sits at the bottom centre, where RBM's counters and the motorised wheels put theirs; on Anti-Tank the vee fills the bottom, so the mark sits above the dot. None is closer than 0.60 to an RBM counter (Armoured Engineer to Light Tank). Waiting for the owner.
 
 ## Phase 4: tools
 
 - [ ] **4.1 Text primitive** in `tools/counters/canvas.py` (`GEMINI.md` section 5.4). Needed before any letter symbol.
-- [ ] **4.2 Design sheet.** Render proposed symbols that are not yet in `SYMBOLS` in a few colours and echelons next to the RBM counters they would sit beside, for the owner's approval in 3.1.
+- [x] **4.2 Design sheet.** Render proposed symbols that are not yet in `SYMBOLS` in a few colours and echelons next to the RBM counters they would sit beside, for the owner's approval in 3.1.
+  - 2026-10-18: done. `python tools/design_sheet.py` writes `artifacts/design_sheet.png` from `tools/counters/proposals.py`: per proposal, the RBM counter with the same mark, this mod's base symbol, the proposal in 6 colours and its 4 echelons at map size, with its closest RBM counter and score.
 - [ ] **4.3 In-game smoke check.** A script on the game harness (`GEMINI.md` section 3) that opens the picker, scrolls to its end, saves a screenshot and scans `error.log` for this mod's sprite names. Done when one command produces both results.
 
 ## Phase 5: a larger picker (blocked)
 
-- [ ] **5.1 Owner (D6).** With about 2,800 icons, reaching this mod's last counter means scrolling about 350 rows of 8 in a picker that shows 8 rows (1.1). A larger picker is a change to a window, and this mod only appends icons (`GEMINI.md` section 5.1). Its home would be the 1440p UI mod (`C:\dev\hoi4-1440p-ui-mod`), but that mod's `wiki/Roadmap.md` puts the designers out of scope (owner, 2026-10-14), because RBM replaces `divisiondesignerview.gui` [RBM-001]. A second picker sits in `countrydeploymentview.gui` (Recruit & Deploy, reworked in that mod's phase A5). Options: revisit that decision for the picker windows alone, or keep the picker as RBM draws it.
+- [ ] **5.1 Owner (D6).** With 2,712 icons, reaching this mod's last counter means scrolling 339 rows of 8 in a picker that shows 8 rows (1.1). A larger picker is a change to a window, and this mod only appends icons (`GEMINI.md` section 5.1). Its home would be the 1440p UI mod (`C:\dev\hoi4-1440p-ui-mod`), but that mod's `wiki/Roadmap.md` puts the designers out of scope (owner, 2026-10-14), because RBM replaces `divisiondesignerview.gui` [RBM-001]. A second picker sits in `countrydeploymentview.gui` (Recruit & Deploy, reworked in that mod's phase A5). Options: revisit that decision for the picker windows alone, or keep the picker as RBM draws it.
 
 ## Maintenance
 
@@ -129,12 +138,12 @@ Each of these runs when its trigger happens, whatever phase is open.
 | 2026-10-16 | D1: every symbol ships all 4 echelons in all 12 colours. | 1.2 |
 | 2026-10-16 | D3: keep the CI workflow; delete the wiki. | 1.4 |
 | 2026-10-16 | D2: no test of a save in the unpatched game. A game update is expected to break saves anyway, so this mod does not plan for campaigns that run across one. | 1.3 |
+| 2026-10-18 | D4: keep the current symbol order in the picker; no renumber. Phase 2's symbols follow Maintenance. | 2.3 |
 
 ### Open
 
 | Id | Question | Item | Needed by |
 |---|---|---|---|
-| D4 | Group the symbol families and renumber once? | 2.3 | the freeze |
 | D5 | Which designs without an RBM icon to add? | 3.1 | each proposal |
 | D6 | Enlarge the icon picker in the 1440p UI mod? | 5.1 | any time |
 | D7 | What to do when RBM's index range or counters change? | Maintenance | when it happens |

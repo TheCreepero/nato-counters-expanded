@@ -47,6 +47,24 @@ def solid_wheels(pen):
         pen.disc(CX + offset, 21.6, 2.4)
 
 
+WEIGHT_BAR_INNER_EDGE = 5.9
+WEIGHT_BAR_OUTER_EDGE = {"medium": 4.0, "heavy": 2.0, "super_heavy": 0.0, "modern": 3.0}
+
+
+def weight_bars(pen, weight):
+    outer = WEIGHT_BAR_OUTER_EDGE[weight]
+    spans = [(outer, WEIGHT_BAR_INNER_EDGE)]
+    if weight == "modern":
+        spans.append((W - WEIGHT_BAR_INNER_EDGE, W - outer))
+    for left, right in spans:
+        pen.polygon([(left, 0), (right, 0), (right, H), (left, H)])
+
+
+def amphibious_waves(pen):
+    for offset in (-16.35, -5.45, 5.45, 16.35):
+        pen.arc(CX + offset, 26.7, 4.7, 8.0, 180, 360, 2.2)
+
+
 def artillery(pen):
     gun_dot(pen)
 
@@ -136,6 +154,43 @@ def maintenance(pen):
             pen.line([start, end], 2.2, round_caps=True)
 
 
+def weighted(draw, weight):
+    def draw_weighted(pen):
+        draw(pen)
+        weight_bars(pen, weight)
+    return draw_weighted
+
+
+def modern_tank(pen):
+    armour_oval(pen)
+    weight_bars(pen, "modern")
+
+
+def motorised_anti_tank(pen):
+    anti_tank(pen)
+    solid_wheels(pen)
+
+
+def motorised_anti_air(pen):
+    anti_air(pen)
+    solid_wheels(pen)
+
+
+def motorised_rocket_artillery(pen):
+    rocket_artillery(pen)
+    solid_wheels(pen)
+
+
+def armoured_recon(pen):
+    armoured_car(pen)
+    recon_slash(pen)
+
+
+def amphibious_tank(pen):
+    armour_oval(pen)
+    amphibious_waves(pen)
+
+
 SYMBOLS = (
     Symbol("artillery", "Artillery", "Artillery.Gun.Towed", artillery),
     Symbol("motorised_artillery", "Motorised Artillery", "Artillery.Gun.Motorised", motorised_artillery),
@@ -153,4 +208,25 @@ SYMBOLS = (
     Symbol("medical", "Medical", "Support.Hospital", medical),
     Symbol("logistics", "Logistics", "Support.Logistics", logistics),
     Symbol("maintenance", "Maintenance", "Support.Maintenance", maintenance),
+    Symbol("sp_artillery_medium", "Medium Self-Propelled Artillery", "Artillery.SPG.Medium", weighted(sp_artillery, "medium")),
+    Symbol("sp_artillery_heavy", "Heavy Self-Propelled Artillery", "Artillery.SPG.Heavy", weighted(sp_artillery, "heavy")),
+    Symbol("sp_artillery_super_heavy", "Super-Heavy Self-Propelled Artillery", "Artillery.SPG.SuperHeavy",
+           weighted(sp_artillery, "super_heavy")),
+    Symbol("sp_artillery_modern", "Modern Self-Propelled Artillery", "Artillery.SPG.Modern", weighted(sp_artillery, "modern")),
+    Symbol("tank_destroyer_medium", "Medium Tank Destroyer", "Artillery.TD.Medium", weighted(tank_destroyer, "medium")),
+    Symbol("tank_destroyer_heavy", "Heavy Tank Destroyer", "Artillery.TD.Heavy", weighted(tank_destroyer, "heavy")),
+    Symbol("tank_destroyer_super_heavy", "Super-Heavy Tank Destroyer", "Artillery.TD.SuperHeavy",
+           weighted(tank_destroyer, "super_heavy")),
+    Symbol("tank_destroyer_modern", "Modern Tank Destroyer", "Artillery.TD.Modern", weighted(tank_destroyer, "modern")),
+    Symbol("sp_anti_air_medium", "Medium Self-Propelled Anti-Air", "Artillery.SPAA.Medium", weighted(sp_anti_air, "medium")),
+    Symbol("sp_anti_air_heavy", "Heavy Self-Propelled Anti-Air", "Artillery.SPAA.Heavy", weighted(sp_anti_air, "heavy")),
+    Symbol("sp_anti_air_super_heavy", "Super-Heavy Self-Propelled Anti-Air", "Artillery.SPAA.SuperHeavy",
+           weighted(sp_anti_air, "super_heavy")),
+    Symbol("sp_anti_air_modern", "Modern Self-Propelled Anti-Air", "Artillery.SPAA.Modern", weighted(sp_anti_air, "modern")),
+    Symbol("modern_tank", "Modern Tank", "Armour.Tank.Modern", modern_tank),
+    Symbol("motorised_anti_tank", "Motorised Anti-Tank", "Artillery.AntiTank.Motorised", motorised_anti_tank),
+    Symbol("motorised_anti_air", "Motorised Anti-Air", "Artillery.AntiAircraft.Motorised", motorised_anti_air),
+    Symbol("motorised_rocket_artillery", "Motorised Rocket Artillery", "Artillery.Rocket.Motorised", motorised_rocket_artillery),
+    Symbol("armoured_recon", "Armoured Recon", "Support.Recon.ArmouredCar", armoured_recon),
+    Symbol("amphibious_tank", "Amphibious Tank", "Armour.Amphibious.Light", amphibious_tank),
 )
