@@ -136,7 +136,7 @@ python tools\extract_plates.py
 ## Directory Architecture
 
 ```
-C:\dev\nato-counters-expanded/
+nato-counters-expanded/
 |-- descriptor.mod                  # Clausewitz engine descriptor
 |-- thumbnail.png                   # Launcher thumbnail (512x512)
 |-- build.ps1                       # Core build and lifecycle engine

@@ -112,7 +112,7 @@ Watch for these:
 
 ## Phase 5: a larger picker (blocked)
 
-- [ ] **5.1 Owner (D6).** With 2,712 icons, reaching this mod's last counter means scrolling 339 rows of 8 in a picker that shows 8 rows (1.1). A larger picker is a change to a window, and this mod only appends icons (`GEMINI.md` section 5.1). Its home would be the 1440p UI mod (`C:\dev\hoi4-1440p-ui-mod`), but that mod's `wiki/Roadmap.md` puts the designers out of scope (owner, 2026-10-14), because RBM replaces `divisiondesignerview.gui` [RBM-001]. A second picker sits in `countrydeploymentview.gui` (Recruit & Deploy, reworked in that mod's phase A5). Options: revisit that decision for the picker windows alone, or keep the picker as RBM draws it.
+- [ ] **5.1 Owner (D6).** With 2,712 icons, reaching this mod's last counter means scrolling 339 rows of 8 in a picker that shows 8 rows (1.1). A larger picker is a change to a window, and this mod only appends icons (`GEMINI.md` section 5.1). Its home would be the 1440p UI mod (`../hoi4-1440p-ui-mod`), but that mod's `wiki/Roadmap.md` puts the designers out of scope (owner, 2026-10-14), because RBM replaces `divisiondesignerview.gui` [RBM-001]. A second picker sits in `countrydeploymentview.gui` (Recruit & Deploy, reworked in that mod's phase A5). Options: revisit that decision for the picker windows alone, or keep the picker as RBM draws it.
 
 ## Maintenance
 
