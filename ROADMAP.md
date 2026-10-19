@@ -2,7 +2,7 @@
 
 The planned work for NATO Counters Expanded, in order, and the decisions that wait for the owner. How to do the work is in `GEMINI.md`; engine facts live in the knowledge register and appear here only as citations such as [LIM-003].
 
-Last reviewed: 2026-10-18.
+Last reviewed: 2026-10-19.
 
 ## Using this file
 
@@ -105,7 +105,9 @@ Watch for these:
 
 ## Phase 4: tools
 
-- [ ] **4.1 Text primitive** in `tools/counters/canvas.py` (`GEMINI.md` section 5.4). Needed before any letter symbol.
+- [x] **4.1 Text primitive** in `tools/counters/canvas.py` (`GEMINI.md` section 5.4). Needed before any letter symbol. Done when the owner has approved `artifacts/text_sheet.png`.
+  - 2026-10-19: `pen.text` draws A to Z and 0 to 9 (owner's choice) from a stroke font with square ends, clipped to each letter. Fitted on RBM's Military Police "MP": 0.86 at map size, where the pipeline checks every symbol; 0.59 at designer size, where RBM's letters are smaller (0.83 when fitted to that size alone; one draw function serves both sizes, so not both). No shipped counter changed. `python tools/design_sheet.py --text` writes the sheet.
+  - 2026-10-19: the owner approved `artifacts/text_sheet.png` as it is.
 - [x] **4.2 Design sheet.** Render proposed symbols that are not yet in `SYMBOLS` in a few colours and echelons next to the RBM counters they would sit beside, for the owner's approval in 3.1.
   - 2026-10-18: done. `python tools/design_sheet.py` writes `artifacts/design_sheet.png` from `tools/counters/proposals.py`: per proposal, the RBM counter with the same mark, this mod's base symbol, the proposal in 6 colours and its 4 echelons at map size, with its closest RBM counter and score.
 - [ ] **4.3 In-game smoke check.** A script on the game harness (`GEMINI.md` section 3) that opens the picker, scrolls to its end, saves a screenshot and scans `error.log` for this mod's sprite names. Done when one command produces both results.

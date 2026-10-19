@@ -38,7 +38,8 @@ If RBM's GFX Overhaul is not installed, the comparison is skipped with a warning
 ### 5.4 Drawing rules
 - The drawing area is the inside of the plate: 45 units wide and 23 high, origin top left, y pointing down. Use the constants `W`, `H`, `CX`, `CY`.
 - One function renders both counter sizes and every colour and echelon. Never write per-size or per-colour code.
-- `Pen` offers `line`, `polygon`, `disc`, `ring`, `arc` and `oval`. Lines default to 1.6 units, which matches RBM's strokes. There is no text primitive yet; a letter symbol needs one added to `tools/counters/canvas.py` first.
+- `Pen` offers `line`, `polygon`, `disc`, `ring`, `arc`, `oval` and `text`. Lines default to 1.6 units, which matches RBM's strokes.
+- `pen.text(text, x, y, height)` draws capitals A to Z and digits 0 to 9 from the stroke font `GLYPHS` in `tools/counters/canvas.py`, centred on (x, y) (default the centre, 12 units tall, stroke 2.5). It is fitted on RBM's Military Police "MP": `python tools/check_references.py --text MP --reference Support.MilitaryPolice --offset 0.5 0.75` scores 0.86 at map size, where every symbol is checked. RBM draws its designer-size letters smaller, so they score 0.59 there; the designer size cannot be fitted separately, because one function draws both sizes. A letter symbol still passes the RBM and duplicate checks like any other. A new or changed glyph is shown to the user on `python tools/design_sheet.py --text` (`artifacts/text_sheet.png`) first.
 
 ### 5.5 Icon indices are permanent
 - A division template keeps its icon as the index number [ICON-002], and `assets/counters/index_manifest.json` pins that number for every counter. Once a campaign uses the counters, never remove, rename or reorder a symbol key, never edit the manifest by hand and never pass `--renumber`. Any of these makes existing saves show the wrong icon.

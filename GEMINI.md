@@ -14,7 +14,7 @@ Shared rules for every mod in this tree (file encodings, build commands, engine 
 - After a game update run `Set-HoiIconPickerLimit.ps1 -Status` and patch again. A build made without RBM installed is unverified and is reported as such.
 
 ## Commands beyond build.ps1
-- `python tools/generate_counters.py`, `python tools/check_references.py --list | --show <key>`, `python tools/design_sheet.py`, `python tools/extract_plates.py` (only when RBM changes its plates); packages with `pip install -r tools/requirements.txt`.
+- `python tools/generate_counters.py`, `python tools/check_references.py --list | --show <key>`, `python tools/design_sheet.py` (`--text` for the glyphs of the text primitive), `python tools/check_references.py --text <TEXT> --reference <Name>`, `python tools/extract_plates.py` (only when RBM changes its plates); packages with `pip install -r tools/requirements.txt`.
 - In-game check without the launcher: the 1440p mod's harness, `..\hoi4-1440p-ui-mod\tools\GameHarness.ps1` (pipeline section 5.7); the launcher file must point at this folder (`build.ps1 -DevLink`).
 
 ## Read when
