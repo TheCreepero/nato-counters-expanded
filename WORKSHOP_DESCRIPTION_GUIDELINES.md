@@ -1,6 +1,6 @@
 # Steam Workshop Description Guidelines & Reference
 
-> **Not in use.** The owner decided on 2026-10-15 to keep this mod local and not publish it (see `GEMINI.md`, section 5.0). This file is kept only as a reference should that decision change.
+> **Not in use.** The owner decided on 2026-10-15 to keep this mod local and not publish it (see `AGENTS.md`, section 5.0). This file is kept only as a reference should that decision change.
 
 This document provides formatting rules, length limits, and reference templates for maintaining the Steam Workshop listing for **NATO Counters Expanded**.
 

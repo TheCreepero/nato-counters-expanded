@@ -1,6 +1,6 @@
 # NATO Counters Expanded - Counter Pipeline
 
-Moved here from `GEMINI.md` on 2026-10-18, when the rule file was reduced to the rules that always apply; `GEMINI.md` says when to read which section.
+Moved here from `GEMINI.md` on 2026-10-18, when the rule file was reduced to the rules that always apply; `AGENTS.md` says when to read which section.
 
 ## 5. Counter Generation Pipeline
 

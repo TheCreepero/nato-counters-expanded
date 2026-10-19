@@ -37,7 +37,7 @@ param(
 $ErrorActionPreference = 'Stop'
 
 if ($PublishSteam -and -not $DryRun) {
-    Write-Host 'NATO Counters Expanded is a local mod and is never uploaded to the Steam Workshop (GEMINI.md, section 5.0).' -ForegroundColor Red
+    Write-Host 'NATO Counters Expanded is a local mod and is never uploaded to the Steam Workshop (AGENTS.md, section 5.0).' -ForegroundColor Red
     Write-Host 'Its counters can only be picked with the icon picker limit raised in hoi4.exe on this machine.' -ForegroundColor Red
     exit 1
 }
