@@ -88,26 +88,45 @@ Describe "Counter sprite definitions" {
 }
 
 Describe "Counter textures" {
+    BeforeAll {
+        $script:TexturesOnDisk = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::OrdinalIgnoreCase)
+        foreach ($texturePath in [System.IO.Directory]::EnumerateFiles($script:CountersRoot, '*', [System.IO.SearchOption]::AllDirectories)) {
+            [void]$script:TexturesOnDisk.Add($texturePath)
+        }
+    }
+
     It "every sprite points to an existing texture" {
-        $missing = @($script:Sprites | Where-Object { -not (Test-Path -LiteralPath (Join-Path $script:RepoRoot $_.TextureFile)) })
+        $missing = @(foreach ($sprite in $script:Sprites) {
+                if (-not $script:TexturesOnDisk.Contains([System.IO.Path]::Combine($script:RepoRoot, $sprite.TextureFile.Replace('/', '\')))) { $sprite.TextureFile }
+            })
         $missing.Count | Should -Be 0
     }
 
     It "every texture is an uncompressed 32-bit DDS of the size RBM's GFX Overhaul uses" {
+        $header = New-Object byte[] 128
         $wrong = @(foreach ($sprite in $script:Sprites) {
                 $rule = $script:SizeRules[$sprite.Size]
-                $header = Get-DdsHeader -Path (Join-Path $script:RepoRoot $sprite.TextureFile)
-                $isExpected = $header.Magic -eq 'DDS ' -and $header.Width -eq $rule.Width -and $header.Height -eq $rule.Height -and
-                    $header.FourCC -eq 0 -and $header.BitCount -eq 32 -and $header.PayloadSize -eq ($rule.Width * $rule.Height * 4)
+                $stream = [System.IO.File]::OpenRead([System.IO.Path]::Combine($script:RepoRoot, $sprite.TextureFile))
+                try {
+                    $readCount = $stream.Read($header, 0, 128)
+                    $payloadSize = $stream.Length - 128
+                }
+                finally {
+                    $stream.Dispose()
+                }
+                $isExpected = $readCount -eq 128 -and [System.Text.Encoding]::ASCII.GetString($header, 0, 4) -eq 'DDS ' -and
+                    [BitConverter]::ToUInt32($header, 16) -eq $rule.Width -and [BitConverter]::ToUInt32($header, 12) -eq $rule.Height -and
+                    [BitConverter]::ToUInt32($header, 84) -eq 0 -and [BitConverter]::ToUInt32($header, 88) -eq 32 -and $payloadSize -eq ($rule.Width * $rule.Height * 4)
                 if (-not $isExpected) { $sprite.TextureFile }
             })
         $wrong.Count | Should -Be 0
     }
 
     It "has no generated texture without a sprite" {
-        $referenced = @($script:Sprites | ForEach-Object { [System.IO.Path]::GetFileName($_.TextureFile) })
+        $referenced = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::OrdinalIgnoreCase)
+        foreach ($sprite in $script:Sprites) { [void]$referenced.Add([System.IO.Path]::GetFileName($sprite.TextureFile)) }
         $onDisk = @(Get-ChildItem -LiteralPath $script:CountersRoot -Recurse -File -Filter 'nce.*.dds' | ForEach-Object { $_.Name })
-        @($onDisk | Where-Object { $referenced -notcontains $_ }).Count | Should -Be 0
+        @($onDisk | Where-Object { -not $referenced.Contains($_) }).Count | Should -Be 0
     }
 }
 
