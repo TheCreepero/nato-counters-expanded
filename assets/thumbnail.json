@@ -1,0 +1,7 @@
+{
+    "version": 1,
+    "family": "interface",
+    "background": {
+        "gamePath": "dlc/dlc034_no_step_back/gfx/loadingscreens/load_nsb.dds"
+    }
+}
