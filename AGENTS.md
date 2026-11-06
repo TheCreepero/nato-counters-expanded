@@ -4,7 +4,7 @@ Shared rules for every mod in this tree (file encodings, build commands, engine 
 
 ## What this mod is
 - Division counter icons appended after RBM's GFX Overhaul: an expansion of RBM, never a replacement, for the owner's own game. Its content, `gfx/` and `interface/`, is all generated. `README.md` is for people, `ROADMAP.md` holds the planned work and the owner's pending decisions, `docs/counter-pipeline.md` the full pipeline rules.
-- Local only, never published (owner, 2026-10-15): the icon picker stops at index 1023 [LIM-001] [LIM-002], so the mod needs the picker patched on this machine with the Manager's `Scripts\Executable\Set-HoiIconPickerLimit.ps1`. Do not run `-PublishSteam`, `Publish-Mod.ps1` or the `hoi4-mod-release` skill for it; its `steamWorkshopId` stays empty.
+- Local only, never published (owner, 2026-10-15): the icon picker stops at index 1023 [LIM-001] [LIM-002], so the mod needs the picker patched on this machine with the Manager's `Scripts\Executable\Set-HoiIconPickerLimit.ps1`. Do not run `-PublishSteam`, `Publish-Mod.ps1` or the `hoi4-mod-release` skill for it; the Manager's registry marks it `"publish": false`.
 
 ## Mod invariants
 - Never ship a file at a path RBM or vanilla uses, define a sprite other than `GFX_div_templ_<1080 or higher>_large` and `_small`, or use `replace_path` (`tests/Counters.Tests.ps1`).
